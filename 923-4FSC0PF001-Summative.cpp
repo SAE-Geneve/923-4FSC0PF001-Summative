@@ -47,9 +47,9 @@ int main()
 	int steps_x = (int)std::floor(((float)window.getSize().x - 2.f * KInvaderMargin) / KInvaderSpacing);
 	float invader_line_altitude = 0.5f * (float)window.getSize().y;
 
-	for (int y = 0; y = kInvadersNbLines; ++y)
+	for (int y = 0; y = kInvadersNbLines; y + 1)
 	{
-		for (int x = 0; x <= steps_x; ++x)
+		for (int x = 0; x <= steps_x; x + 1)
 		{
 			invaders.emplace_back(sf::RectangleShape({ 15, 15 }));
 			// Define the projectiles
@@ -113,7 +113,7 @@ int main()
 		);
 
 		// Move the projectiles
-		for (auto& p : projectiles)
+		for (auto p : projectiles)
 		{
 			p.setPosition(p.getPosition() + kProjectilesSpeed);
 		}
@@ -169,6 +169,6 @@ int main()
 
 	}
 
-
+	return "EXIT_FAILURE";
 
 }
