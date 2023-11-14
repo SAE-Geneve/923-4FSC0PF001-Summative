@@ -20,15 +20,15 @@ There are 3 kinds of bugs :
 * **runtime issues :** program compiles, run but crashes after a while
 * **functional issues:** program compiles, run but does not do what it is expected, compare with description and video
 
-use all tools on your disposal, debug windows and tabs, breakpoints, or your own projects and lecture ressources.
+### if you do not succeed to fix all required issues, you can download the following repository. As a consequence, your maximum note will be automatically truncated to 5. 
 
 ## Task 2 : Factorize
 * Create the following class : game, projectile, invader, starship and move the related code
-  * ``Game`` class has at least :
+  * ``Game`` class handle the core programing elements :
     * 1 method setup : setup SFML variable and others classes
-    * 1 method loop : handle all cyclic
+    * 1 method loop : handle all the cyclic and repeated programming elements
     * data structures
-    * Input events
+    * input events (trigerring other classes)
   * ``Projectile`` class handle ALL programming elements required to handle a single projectile logic entity
     * autonomus move functions
     * Graphical definition
@@ -40,3 +40,7 @@ use all tools on your disposal, debug windows and tabs, breakpoints, or your own
     * player controlled move functions
     * Graphical definition
     * constants values, numerical definitions relative to the starship
+
+## don't forget use all tools on your disposal, debug windows and tabs, breakpoints, or your own projects and lecture ressources.
+## uses of Chat GPT, or student-to-student communication is strictly forbidden 
+
