@@ -2,6 +2,7 @@
 
 #include "Invader.h"
 #include "Player.h"
+#include "Projectile.h"
 #include "SFML/Graphics.hpp"
 
 
@@ -9,7 +10,7 @@ class Game
 {
 
 	// Const values
-	const sf::Vector2f kProjectilesSpeed = { 0, -32.45636365 };
+	const sf::Vector2f kProjectilesSpeed = { 0, -32.45636365f };
 
 	// Temporary player position
 	float player_position = 0;
@@ -20,7 +21,7 @@ class Game
 	// Ennemies
 	std::vector<Invader> invaders_;
 	// Projectiles
-	std::vector<sf::RectangleShape> projectiles;
+	std::vector<Projectile> projectiles;
 	// Player
 	Player player;
 

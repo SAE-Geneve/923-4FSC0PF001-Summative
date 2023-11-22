@@ -55,11 +55,7 @@ void Game::Loop()
 		// Non events----------------------------------
 		if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && clock_projectiles_.getElapsedTime().asSeconds() > kShootingRateAsSeconds)
 		{
-			projectiles.emplace_back(sf::RectangleShape({ 3, 60 }));
-			// Define the projectiles
-			projectiles.back().setOrigin(1.5, 5);
-			projectiles.back().setPosition(player.GetPosition().x, player.GetPosition().y - 25);
-			projectiles.back().setFillColor(sf::Color::White);
+			projectiles.emplace_back(player.GetPosition().x, player.GetPosition().y - 25, kProjectilesSpeed);
 
 			// Reset timer
 			clock_projectiles_.restart();
@@ -93,16 +89,12 @@ void Game::Loop()
 		// Game play frame ==================================================================================================================================
 		// Move the player
 		player.MoveX(player_position);
-		
 
 		// Move the projectiles
 		for (auto& p : projectiles)
 		{
-			p.setPosition(p.getPosition() + kProjectilesSpeed);
+			p.Move();
 		}
-		// Clean the projectiles
-		auto projectiles_it = std::remove_if(projectiles.begin(), projectiles.end(), [](sf::RectangleShape& p) {return p.getPosition().y < 0; });
-		projectiles.erase(projectiles_it, projectiles.end());
 
 		// KaBooom ?? ================================================================================================================================
 		for (auto& i : invaders_)
@@ -114,13 +106,13 @@ void Game::Loop()
 			for (auto& p : projectiles)
 			{
 
-				if (p.getFillColor() == sf::Color::Black)
+				if (p.IsExpoded())
 					continue;
 
-				if (i.IsColliding(p.getGlobalBounds()))
+				if (i.IsColliding(p.GetBounds()))
 				{
 					// Boom ----------------------------------------------------------------------------
-					p.setFillColor(sf::Color::Black);
+					p.Explode();
 					//i.GetShape().setFillColor(sf::Color::Black);
 					i.Hit();
 				}
@@ -128,14 +120,14 @@ void Game::Loop()
 		}
 
 		// Clean the projectiles
-		auto projectiles_boomed_it = std::remove_if(projectiles.begin(), projectiles.end(), [](sf::RectangleShape& p) {return p.getFillColor() == sf::Color::Black; });
+		auto projectiles_boomed_it = std::remove_if(projectiles.begin(), projectiles.end(), [](Projectile& p) {return p.IsExpoded() || p.IsOutOfWindow(); });
 		projectiles.erase(projectiles_boomed_it, projectiles.end());
+		std::cout << "Projectiles remaining count " << projectiles.size() << std::endl;
 
 		// Clean the invaders
 		auto invader_new_boomed_it = std::remove_if(invaders_.begin(), invaders_.end(), [](Invader& i) {return i.IsDead(); });
 		invaders_.erase(invader_new_boomed_it, invaders_.end());
 
-		//std::cout << "Projectiles remaining count " << projectiles.size() << std::endl;
 
 		// Graphical frame ==================================================================================================================================
 		//for (auto& i : invaders)
@@ -148,7 +140,7 @@ void Game::Loop()
 		}
 		for (auto& p : projectiles)
 		{
-			window_.draw(p);
+			p.Draw(window_);
 		}
 
 		player.Draw(window_);
