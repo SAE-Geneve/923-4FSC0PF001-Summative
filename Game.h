@@ -18,7 +18,7 @@ class Game
 	sf::Clock clock_projectiles_;
 
 	// Ennemies
-	std::vector<Invader> invaders_new_;
+	std::vector<Invader> invaders_;
 	// Projectiles
 	std::vector<sf::RectangleShape> projectiles;
 	// Player

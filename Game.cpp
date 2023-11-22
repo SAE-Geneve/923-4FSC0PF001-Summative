@@ -31,7 +31,7 @@ void Game::Setup()
 	{
 		for (int x = 0; x <= steps_x; ++x)
 		{
-			invaders_new_.emplace_back(KInvaderMargin + x * KInvaderSpacing, invader_line_altitude);
+			invaders_.emplace_back(KInvaderMargin + x * KInvaderSpacing, invader_line_altitude);
 		}
 
 		invader_line_altitude -= KInvaderSpacing;
@@ -103,7 +103,7 @@ void Game::Loop()
 		projectiles.erase(projectiles_it, projectiles.end());
 
 		// KaBooom ?? ================================================================================================================================
-		for (auto& i : invaders_new_)
+		for (auto& i : invaders_)
 		{
 
 			if (i.GetShape().getFillColor() == sf::Color::Black)
@@ -129,8 +129,8 @@ void Game::Loop()
 		projectiles.erase(projectiles_boomed_it, projectiles.end());
 
 		// Clean the invaders
-		auto invader_new_boomed_it = std::remove_if(invaders_new_.begin(), invaders_new_.end(), [](Invader& i) {return i.GetShape().getFillColor() == sf::Color::Black; });
-		invaders_new_.erase(invader_new_boomed_it, invaders_new_.end());
+		auto invader_new_boomed_it = std::remove_if(invaders_.begin(), invaders_.end(), [](Invader& i) {return i.GetShape().getFillColor() == sf::Color::Black; });
+		invaders_.erase(invader_new_boomed_it, invaders_.end());
 
 		//std::cout << "Projectiles remaining count " << projectiles.size() << std::endl;
 
@@ -139,7 +139,7 @@ void Game::Loop()
 		//{
 		//	window_.draw(i);
 		//}
-		for (auto i : invaders_new_)
+		for (auto i : invaders_)
 		{
 			i.Draw(window_);
 		}
