@@ -11,6 +11,8 @@ constexpr float kShootingRateAsSeconds = 0.15f;
 
 void Game::Setup()
 {
+	srand(time(NULL));
+
 	window_.create(sf::VideoMode(1280, 720), "4FSC0PF001 - Summative exam");
 
 	// Basic Setup of the window
@@ -106,7 +108,7 @@ void Game::Loop()
 		for (auto& i : invaders_)
 		{
 
-			if (i.GetShape().getFillColor() == sf::Color::Black)
+			if (i.IsDead())
 				continue;
 
 			for (auto& p : projectiles)
@@ -115,11 +117,12 @@ void Game::Loop()
 				if (p.getFillColor() == sf::Color::Black)
 					continue;
 
-				if (i.GetShape().getGlobalBounds().intersects(p.getGlobalBounds()))
+				if (i.IsColliding(p.getGlobalBounds()))
 				{
 					// Boom ----------------------------------------------------------------------------
 					p.setFillColor(sf::Color::Black);
-					i.GetShape().setFillColor(sf::Color::Black);
+					//i.GetShape().setFillColor(sf::Color::Black);
+					i.Hit();
 				}
 			}
 		}
@@ -129,7 +132,7 @@ void Game::Loop()
 		projectiles.erase(projectiles_boomed_it, projectiles.end());
 
 		// Clean the invaders
-		auto invader_new_boomed_it = std::remove_if(invaders_.begin(), invaders_.end(), [](Invader& i) {return i.GetShape().getFillColor() == sf::Color::Black; });
+		auto invader_new_boomed_it = std::remove_if(invaders_.begin(), invaders_.end(), [](Invader& i) {return i.IsDead(); });
 		invaders_.erase(invader_new_boomed_it, invaders_.end());
 
 		//std::cout << "Projectiles remaining count " << projectiles.size() << std::endl;
