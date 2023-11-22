@@ -5,7 +5,6 @@ constexpr float KInvaderMargin = 150;
 constexpr float KInvaderSpacing = 20;
 constexpr float kInvadersNbLines = 15;
 
-constexpr float kSmoothRatio = 0.15f;
 constexpr float kShootingRateAsSeconds = 0.15f;
 
 void Game::Setup()
@@ -20,14 +19,7 @@ void Game::Setup()
 	
 
 	// Game elements -------------------------------------------------------------------------
-	// Player
-	player = sf::CircleShape(5, 3);
-	player.setOrigin(2.5, 2.5);
-	player.setPosition({ (float)window_.getSize().x * 0.5f , kPlayerAltitude });
-	player.setFillColor(sf::Color(92, 88, 168));
-	player.setOutlineColor(sf::Color::White);
-	player.setOutlineThickness(1);
-	
+	player.Setup();
 
 	int steps_x = (int)std::floor(((float)window_.getSize().x - 2.f * KInvaderMargin) / KInvaderSpacing);
 	float invader_line_altitude = 0.5f * (float)window_.getSize().y;
@@ -62,7 +54,7 @@ void Game::Loop()
 			projectiles.emplace_back(sf::RectangleShape({ 3, 60 }));
 			// Define the projectiles
 			projectiles.back().setOrigin(1.5, 5);
-			projectiles.back().setPosition(player.getPosition().x, player.getPosition().y - 25);
+			projectiles.back().setPosition(player.GetPosition().x, player.GetPosition().y - 25);
 			projectiles.back().setFillColor(sf::Color::White);
 
 			// Reset timer
@@ -96,11 +88,8 @@ void Game::Loop()
 
 		// Game play frame ==================================================================================================================================
 		// Move the player
-		player.setPosition(
-			{ kSmoothRatio * player_position + (1.F - kSmoothRatio) * player.getPosition().x,
-				kPlayerAltitude
-			}
-		);
+		player.MoveX(player_position);
+		
 
 		// Move the projectiles
 		for (auto& p : projectiles)
@@ -153,7 +142,7 @@ void Game::Loop()
 			window_.draw(p);
 		}
 
-		window_.draw(player);
+		player.Draw(window_);
 
 		window_.display();
 

@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Player.h"
 #include "SFML/Graphics.hpp"
 
 
@@ -7,7 +8,6 @@ class Game
 {
 
 	// Const values
-	const float kPlayerAltitude = 650;
 	const sf::Vector2f kProjectilesSpeed = { 0, -32.45636365 };
 
 	// Temporary player position
@@ -21,9 +21,7 @@ class Game
 	// Projectiles
 	std::vector<sf::RectangleShape> projectiles;
 	// Player
-	sf::CircleShape player;
-
-	
+	Player player;
 
 public:
 	void Setup();
