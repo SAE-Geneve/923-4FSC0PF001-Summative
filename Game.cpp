@@ -1,5 +1,7 @@
 #include "Game.h"
 
+#include <iostream>
+
 // Constants
 constexpr float KInvaderMargin = 150;
 constexpr float KInvaderSpacing = 20;
@@ -24,20 +26,20 @@ void Game::Setup()
 	int steps_x = (int)std::floor(((float)window_.getSize().x - 2.f * KInvaderMargin) / KInvaderSpacing);
 	float invader_line_altitude = 0.5f * (float)window_.getSize().y;
 
+	invader_line_altitude = 0.5f * (float)window_.getSize().y;
 	for (int y = 0; y <= kInvadersNbLines; ++y)
 	{
 		for (int x = 0; x <= steps_x; ++x)
 		{
-			invaders.emplace_back(sf::RectangleShape({ 15, 15 }));
-			// Define the projectiles
-			invaders.back().setOrigin(7.5, 7.5);
-			invaders.back().setPosition(KInvaderMargin + x * KInvaderSpacing, invader_line_altitude);
-			invaders.back().setFillColor(sf::Color::Red);
+			invaders_new_.emplace_back(KInvaderMargin + x * KInvaderSpacing, invader_line_altitude);
 		}
 
 		invader_line_altitude -= KInvaderSpacing;
 
 	}
+
+	std::cout << "check" << std::endl;
+
 }
 
 void Game::Loop()
@@ -101,10 +103,10 @@ void Game::Loop()
 		projectiles.erase(projectiles_it, projectiles.end());
 
 		// KaBooom ?? ================================================================================================================================
-		for (auto& i : invaders)
+		for (auto& i : invaders_new_)
 		{
 
-			if (i.getFillColor() == sf::Color::Black)
+			if (i.GetShape().getFillColor() == sf::Color::Black)
 				continue;
 
 			for (auto& p : projectiles)
@@ -113,11 +115,11 @@ void Game::Loop()
 				if (p.getFillColor() == sf::Color::Black)
 					continue;
 
-				if (i.getGlobalBounds().intersects(p.getGlobalBounds()))
+				if (i.GetShape().getGlobalBounds().intersects(p.getGlobalBounds()))
 				{
 					// Boom ----------------------------------------------------------------------------
 					p.setFillColor(sf::Color::Black);
-					i.setFillColor(sf::Color::Black);
+					i.GetShape().setFillColor(sf::Color::Black);
 				}
 			}
 		}
@@ -127,15 +129,19 @@ void Game::Loop()
 		projectiles.erase(projectiles_boomed_it, projectiles.end());
 
 		// Clean the invaders
-		auto invader_boomed_it = std::remove_if(invaders.begin(), invaders.end(), [](sf::RectangleShape& i) {return i.getFillColor() == sf::Color::Black; });
-		invaders.erase(invader_boomed_it, invaders.end());
+		auto invader_new_boomed_it = std::remove_if(invaders_new_.begin(), invaders_new_.end(), [](Invader& i) {return i.GetShape().getFillColor() == sf::Color::Black; });
+		invaders_new_.erase(invader_new_boomed_it, invaders_new_.end());
 
 		//std::cout << "Projectiles remaining count " << projectiles.size() << std::endl;
 
 		// Graphical frame ==================================================================================================================================
-		for (auto& i : invaders)
+		//for (auto& i : invaders)
+		//{
+		//	window_.draw(i);
+		//}
+		for (auto i : invaders_new_)
 		{
-			window_.draw(i);
+			i.Draw(window_);
 		}
 		for (auto& p : projectiles)
 		{

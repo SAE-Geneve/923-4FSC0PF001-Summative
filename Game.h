@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Invader.h"
 #include "Player.h"
 #include "SFML/Graphics.hpp"
 
@@ -17,7 +18,7 @@ class Game
 	sf::Clock clock_projectiles_;
 
 	// Ennemies
-	std::vector<sf::RectangleShape> invaders;
+	std::vector<Invader> invaders_new_;
 	// Projectiles
 	std::vector<sf::RectangleShape> projectiles;
 	// Player
