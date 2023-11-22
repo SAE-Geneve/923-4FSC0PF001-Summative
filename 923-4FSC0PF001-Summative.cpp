@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-#include 'SFML/Graphics.hpp'
+#include "SFML/Graphics.hpp"
 
 int main()
 {
@@ -11,7 +11,7 @@ int main()
 	// Basic Setup of the window
 	// Vertical sync, framerate
 	window.setVerticalSyncEnabled(true);
-	window.setFramerateLimit 30;
+	window.setFramerateLimit(30); // TO DO : bug the framerate
 
 	// Constants
 	constexpr float KInvaderMargin = 150;
@@ -20,7 +20,7 @@ int main()
 
 	constexpr float kSmoothRatio = 0.15f;
 	constexpr float kShootingRateAsSeconds = 0.15f;
-	const float kPlayerAltitude = (float)window.getSize() - 50;
+	const float kPlayerAltitude = (float)window.getSize().y - 50;
 
 	// Time ----------------------------------------------------------------------------------
 	sf::Clock clock_projectiles_;
@@ -32,11 +32,10 @@ int main()
 
 	// Projectiles
 	std::vector<sf::RectangleShape> projectiles;
-	const sf::Vector2f kProjectilesSpeed = ( 0, -32.45636365);
+	const sf::Vector2f kProjectilesSpeed = { 0, -32.45636365 };
 
 	// Player
 	sf::CircleShape player = sf::CircleShape(5, 3);
-	kPlayerAltitude = 75;
 	player.setOrigin(2.5, 2.5);
 	player.setPosition({ (float)window.getSize().x * 0.5f , kPlayerAltitude });
 	player.setFillColor(sf::Color(92, 88, 168));
@@ -47,9 +46,9 @@ int main()
 	int steps_x = (int)std::floor(((float)window.getSize().x - 2.f * KInvaderMargin) / KInvaderSpacing);
 	float invader_line_altitude = 0.5f * (float)window.getSize().y;
 
-	for (int y = 0; y = kInvadersNbLines; y + 1)
+	for (int y = 0; y <= kInvadersNbLines; ++y)
 	{
-		for (int x = 0; x <= steps_x; x + 1)
+		for (int x = 0; x <= steps_x; ++x)
 		{
 			invaders.emplace_back(sf::RectangleShape({ 15, 15 }));
 			// Define the projectiles
@@ -58,11 +57,11 @@ int main()
 			invaders.back().setFillColor(sf::Color::Red);
 		}
 
-		invader_line_altitude - KInvaderSpacing;
+		invader_line_altitude -= KInvaderSpacing;
 
 	}
 
-	while (!window.isOpen())
+	while (window.isOpen())
 	{
 
 		window.clear(sf::Color::Black);
@@ -113,7 +112,7 @@ int main()
 		);
 
 		// Move the projectiles
-		for (auto p : projectiles)
+		for (auto& p : projectiles)
 		{
 			p.setPosition(p.getPosition() + kProjectilesSpeed);
 		}
@@ -122,13 +121,13 @@ int main()
 		projectiles.erase(projectiles_it, projectiles.end());
 
 		// KaBooom ?? ================================================================================================================================
-		for (auto* i : invaders)
+		for (auto& i : invaders)
 		{
 
 			if (i.getFillColor() == sf::Color::Black)
 				continue;
 
-			for (auto* p : projectiles)
+			for (auto& p : projectiles)
 			{
 
 				if (p.getFillColor() == sf::Color::Black)
@@ -148,8 +147,8 @@ int main()
 		projectiles.erase(projectiles_boomed_it, projectiles.end());
 
 		// Clean the invaders
-		std::remove_if(invaders.begin(), invaders.end(), [](sf::RectangleShape& i) {return i.getFillColor() == sf::Color::Black; });
-		invaders.erase(invaders.end());
+		auto invader_boomed_it = std::remove_if(invaders.begin(), invaders.end(), [](sf::RectangleShape& i) {return i.getFillColor() == sf::Color::Black; });
+		invaders.erase(invader_boomed_it, invaders.end());
 
 		//std::cout << "Projectiles remaining count " << projectiles.size() << std::endl;
 
@@ -169,6 +168,6 @@ int main()
 
 	}
 
-	return "EXIT_FAILURE";
+
 
 }
